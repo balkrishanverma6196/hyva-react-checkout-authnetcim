@@ -3,13 +3,13 @@ import { func, shape, string } from 'prop-types';
 
 import RadioInput from '../../components/common/Form/RadioInput';
 import { __ } from '../../i18n';
-import { placeOrderRequest } from '../../api';
 import { GraphQLResponseException } from '../../api/utility';
 import useAppContext from '../../hook/useAppContext';
 import useCheckoutFormContext from '../../hook/useCheckoutFormContext';
 import { fetchCheckoutConfig, fetchStoredCards, setPaymentData } from './api';
 import { loadAcceptJs, tokenizeCard } from './acceptJs';
 import { detectType, digitsOnly, validateCard } from './card';
+import { placeOrderOrThrow } from './graphql';
 
 const METHOD = 'authnetcim';
 const NEW_CARD = '';
@@ -117,7 +117,7 @@ function AuthnetCim({ method, selected, actions }) {
       }
 
       await setPaymentData(appDispatch, data);
-      const order = await placeOrderRequest(appDispatch);
+      const order = await placeOrderOrThrow(appDispatch);
       setCard(EMPTY_CARD);
       return order;
     } catch (error) {

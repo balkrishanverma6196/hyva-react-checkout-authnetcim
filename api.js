@@ -1,5 +1,6 @@
 import sendRequest from '../../api/sendRequest';
 import LocalStorage from '../../utils/localStorage';
+import { sendOrThrow } from './graphql';
 
 const CHECKOUT_CONFIG_QUERY = `
 query authnetcimCheckoutConfig {
@@ -51,8 +52,10 @@ export async function fetchStoredCards(dispatch) {
 }
 
 export function setPaymentData(dispatch, data) {
-  return sendRequest(dispatch, {
-    query: SET_PAYMENT_MUTATION,
-    variables: { cartId: LocalStorage.getCartId(), data },
-  });
+  return sendOrThrow(
+    dispatch,
+    SET_PAYMENT_MUTATION,
+    { cartId: LocalStorage.getCartId(), data },
+    'setPaymentMethodOnCart'
+  );
 }
